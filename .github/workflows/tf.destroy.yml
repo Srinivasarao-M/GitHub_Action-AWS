@@ -9,8 +9,8 @@ on:
 
 env:
   ENV: dev
-  BUCKET_NAME: aws-ceq-dev-devops-state
-  DYNAMO_DB : aws-ceq-dev-devops-statelock
+  BUCKET_NAME: aws-msr-dev-devops-state
+  DYNAMO_DB : aws-msr-dev-devops-statelock
 
 # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
 defaults:
