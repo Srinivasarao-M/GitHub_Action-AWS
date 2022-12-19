@@ -1,6 +1,6 @@
 resource "aws_iam_instance_profile" "ssm-profile" {
   name = "ssm-profile"
-  role = "EC2-SSM-Connect-Role"
+  role = "SSM-CONNECT-PROFILE"
 }
 
 resource "aws_instance" "webec2" {
