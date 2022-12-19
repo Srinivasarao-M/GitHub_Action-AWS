@@ -108,7 +108,7 @@ resource "aws_security_group" "Self-hosted-runner-sg" {
   }
 
   tags = {
-            Name" = "self-hosted-runner-sg-${var.platform_name}-${var.application_name}-${var.Environment}"
+            Name = "self-hosted-runner-sg-${var.platform_name}-${var.application_name}-${var.Environment}"
     }
   depends_on = [aws_vpc.msr_vpc]
 }
