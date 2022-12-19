@@ -58,3 +58,13 @@ variable "app_private_subnet_cidr" {
     type    = list
     default = ["10.0.2.0/24","10.0.3.0/24"]
 }
+
+variable "web_servers_count" {
+  type    = number
+  default = 1
+}
+
+variable "ami" {
+  type    = string
+  default = "ami-0b5eea76982371e91"
+}
