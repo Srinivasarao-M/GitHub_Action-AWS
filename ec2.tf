@@ -1,5 +1,5 @@
 resource "aws_iam_instance_profile" "ssm-profile" {
-  name = "SSM-CONNECT-PROFILE"
+  name = "ssm-profile"
   role = "EC2-SSM-Connect-Role"
 }
 
