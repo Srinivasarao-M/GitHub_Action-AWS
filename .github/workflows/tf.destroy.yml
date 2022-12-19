@@ -1,0 +1,58 @@
+name: 'Terraform Destroy'
+on:
+  workflow_dispatch:
+    inputs:
+      infra_env:
+        description: 'Environment of infrastructure'
+        required: true
+        default: 'dev'
+
+env:
+  ENV: dev
+  BUCKET_NAME: aws-ceq-dev-devops-state
+  DYNAMO_DB : aws-ceq-dev-devops-statelock
+
+# Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+defaults:
+  run:
+    shell: bash
+
+jobs:  
+  terraform:
+    name: 'destroy msr web infra'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    # - name: Install Terrascan      
+    #   run: |
+    #     curl --location https://github.com/accurics/terrascan/releases/download/v1.2.0/terrascan_1.2.0_Darwin_x86_64.tar.gz --output terrascan.tar.gz
+    #     tar -xvf terrascan.tar.gz
+    #     sudo install terrascan /usr/local/bin
+    #     terrascan scan -t aws
+
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1    
+    
+    - name: Terraform Init
+      run: terraform init -no-color -reconfigure -force-copy -backend-config="bucket=$BUCKET_NAME" -backend-config="key=${{ env.TF_VAR_STATE_FILE }}" -backend-config="dynamodb_table=$DYNAMO_DB" -backend-config="encrypt=true"
+      env:
+        TF_VAR_STATE_FILE: "$ENV-${{ github.event.repository.name }}.tfstate"  
+
+    - name: Terraform Destroy
+      #if: github.ref == 'refs/heads/master' && github.event_name == 'push'      
+      run: terraform destroy -auto-approve -input=false -lock=false
