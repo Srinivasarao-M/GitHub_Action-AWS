@@ -19,9 +19,6 @@ resource "aws_route_table_association" "web_public_route_table_association" {
 
 resource "aws_route_table" "app_private_route_table" {
   vpc_id = aws_vpc.msr_vpc.id
-  route {
-
-  }
   tags = {
            Name = "${var.platform_name}-${var.application_name}-${var.Environment}-app_private_route_table"
     }
